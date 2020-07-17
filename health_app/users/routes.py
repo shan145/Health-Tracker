@@ -59,7 +59,7 @@ def logout():
     logout_user()
     flash('You have successfully logged out')
 
-    return redirect(url_for('.startpage'))
+    return redirect(url_for('user.login'))
 
         
 

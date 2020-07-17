@@ -26,7 +26,8 @@ def test():
 
 # Setting up login manager for app
 login_manager.init_app(app)
-login_manager.login_message = "Login required"
+login_manager.login_message = "Login is required to enter dashboard"
+login_manager.login_view="user.login"
 
 # Sets up Bootstrap to allow for wtf forms
 Bootstrap(app)

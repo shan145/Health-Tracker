@@ -6,4 +6,4 @@ from flask_login import login_required
 @login_required
 def dashboard():
     # Renders dashboard page for user on /dashboard route
-    return render_template('health/dashboard.html')
+    return render_template('health/dashboard.html', title='Dashboard')

@@ -7,8 +7,9 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
-                <div class="intro-message">
-                    <h1>Welcome, {{current_user.first_name}} {{current_user.last_name}}</h1>
+                <h2>Weight Tracker</h2>
+                <div id="svg">
+                    <script src="{{ url_for('static', filename='js/vis.js') }}"></script>
                 </div>
             </div>
         </div>

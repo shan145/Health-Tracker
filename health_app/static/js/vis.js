@@ -1,57 +1,78 @@
 // health_app/templates/health/vis.js
 
 /**
- * Creates visualizations for weight data using d3
+ * Creates visualizations for weight data using Chart.js
  */
 
-// Constants for SVG container
-const height = 600;
-const width = 800;
-const margins = {"top": 50, "right": 50, "bottom": 50, "left": 50};
-const chartHeight = height-margins.top-margins.bottom;
-const chartWidth = width-margins.right-margins.left;
+// Chart data from DB (passed via render_template)
+let chartData = {
+    labels: [
+        {% for health in health_data %}
+            "{{ health['date'] }}",
+        {% endfor %}
+    ],
+    datasets: [{
+        data: [
+            {% for health in health_data %}
+                {{ health['weight'] }},
+            {% endfor %}
+        ],
+        label: "Weight",
+        borderColor: "#3e95cd",
+        fill: true
+    }]
+};
 
-// Constants for scales
-
-
-// Creating Visualization with SVG
-let svg = d3.select("#svg")
-            .append("svg")
-            .attr("height", height)
-            .attr("width", width)
-
-//Creating tester svg for now-need to add routes for getting health data
-function randomPixel() {
-    return Math.random() * svg.attr("height");
-  }
-  
-
-// JS style loop
-let colors = ["red","blue","red","blue","red","blue","red","blue","red","blue"];
-colors.forEach( (d, i) => {
-    // d = the element in the array
-    // i = the position in the array
-    
-    let rad = 4 + Math.random() * 20;
-    
-    svg.append("circle")
-    .attr("r", rad)
-    .attr("cx", randomPixel() )
-    .attr("cy", randomPixel() )
-    .attr("fill", d);
-    
-    
-} );
+// Used to get this weeks' dates
+let maxDate = new Date();
+let minDate = new Date();
+const numberOfDays = 3;
+maxDate.setDate(maxDate.getDate() + numberOfDays); 
+minDate.setDate(minDate.getDate() - numberOfDays);
+console.log(maxDate);
+console.log(minDate);
 
 
-// 4. How do we update the attributes of existing elements?   
-d3.selectAll("circle")
-    .transition().delay(1000).duration(500)
-    .attr("r",20);
-    
-d3.selectAll("circle")
-    .transition().delay(1600).duration(500)
-    .attr("r", 100)
-    .attr("cx", 200)
-    .attr("cy", 200)
-    .style("fill", "purple");
+// Chart options for pretty display
+let chartOptions = {
+    scales: {
+        yAxes: [{
+            ticks: {
+                suggestedMin: 100,
+                suggestedMax: 200
+            },
+            scaleLabel: {
+                display: true,
+                labelString: 'Weight (lbs)'
+            }
+        }],
+        xAxes: [{
+            type: "time",
+            time: {
+                parser: "MM/DD/YYYY",
+                tooltipFormat: "ll",
+                unit: "day",
+                displayFormats: {
+                    "day": "MM/DD/YYYY"
+                },
+                min: minDate,
+                max: maxDate
+            },
+            scaleLabel: {
+                display: true,
+                labelString: 'Date'
+            }
+        }]
+    },
+    legend: {
+        display: true,
+        position: "right",
+        align: "end",
+    }
+}
+// Creates chart data in HTML canvas
+new Chart(document.getElementById("myChart"), {
+    type: 'line',
+    data: chartData,
+    options: chartOptions
+});

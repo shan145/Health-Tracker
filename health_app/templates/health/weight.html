@@ -25,7 +25,7 @@
                 {{ form.hidden_tag() }}
                 {{ wtf.form_errors(form, hiddens="only") }}
                 {{ wtf.form_field(form.weight) }}
-                {{ wtf.form_field(form.date, type="date", id="input_date") }}
+                {{ wtf.form_field(form.date, type="date") }}
                 {{ wtf.form_field(form.submit) }}
             </form>
         </div>

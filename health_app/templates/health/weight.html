@@ -1,4 +1,5 @@
 {% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/utils.html" as utils %}
 {% extends "base.html" %}
 {% block title %}
     {% if add_weight %}
@@ -10,28 +11,31 @@
 
 {% block body %}
 <div class="content-section">
- <div class="outer">
-    <div class="middle">
-      <div class="inner">
-        <div class="center">
-            {% if add_weight %}
-                <h1>Add Weight</h1>
-            {% else %}
-                <h1>Edit Weight</h1>
-            {% endif %}
-            <br/>
-            <!-- {{ wtf.quick_form(form) }} -->
-            <form class="form basic" method="post" role="form">
-                {{ form.hidden_tag() }}
-                {{ wtf.form_errors(form, hiddens="only") }}
-                {{ wtf.form_field(form.weight) }}
-                {{ wtf.form_field(form.date, type="date") }}
-                {{ wtf.form_field(form.submit) }}
-            </form>
+    <br/>
+    {{ utils.flashed_messages() }}
+    <br />
+    <div class="outer">
+        <div class="middle">
+        <div class="inner">
+            <div class="center">
+                {% if add_weight %}
+                    <h1>Add Weight</h1>
+                {% else %}
+                    <h1>Edit Weight</h1>
+                {% endif %}
+                <br/>
+                <!-- {{ wtf.quick_form(form) }} -->
+                <form class="form basic" method="post" role="form">
+                    {{ form.hidden_tag() }}
+                    {{ wtf.form_errors(form, hiddens="only") }}
+                    {{ wtf.form_field(form.weight) }}
+                    {{ wtf.form_field(form.date, type="date") }}
+                    {{ wtf.form_field(form.submit) }}
+                </form>
+            </div>
         </div>
-      </div>
+        </div>
     </div>
-  </div>
 </div>
 {% endblock %}
 

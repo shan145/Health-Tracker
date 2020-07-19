@@ -31,7 +31,6 @@ let colors = ["red","blue","red","blue","red","blue","red","blue","red","blue"];
 colors.forEach( (d, i) => {
     // d = the element in the array
     // i = the position in the array
-    console.log(d,i);
     
     let rad = 4 + Math.random() * 20;
     

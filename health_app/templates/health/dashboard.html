@@ -1,4 +1,6 @@
 <!-- health_app/templates/health/dashboard.html -->
+
+{% import "bootstrap/wtf.html" as wtf %}
 {% import "bootstrap/utils.html" as utils %}
 {% extends "base.html" %}
 {% block title %}Dashboard{% endblock %}
@@ -14,7 +16,7 @@
                 <canvas id="myChart" width="800" height="400"></canvas>
                 <!-- Modal -->
                 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                    <div class="modal-dialog" role="document">
+                    <div class="modal-dialog model-sm" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Change Data?</h5>
@@ -22,127 +24,34 @@
                             <span aria-hidden="true">&times;</span>
                         </button>
                         </div>
-                        <div class="modal-body">
-                            <p>
-                                <a id="edit" href="#" class="btn btn-default" role="button">
-                                    <i class="fa fa-pencil"></i> Edit
-                                </a>
-                            </p>
-                            <p>
+                        <form class="form basic" action="#" method="post" role="form" id="saveFormID">
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <label for="weightForm">Weight (lbs)</label>
+                                    <input type="text" name="weight" class="form-control" placeholder="Weight" id="weightForm">
+                                </div>
+                                <div class="form-group">
+                                    <label for="dateForm">Date</label>
+                                    <input type="text" class="form-control" id="dateForm" readonly>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" id="edit" class="btn btn-default">
+                                    <i class="fa fa-pencil"></i> Save
+                                </button>
+                    
                                 <a id="delete" href="#" class="btn btn-default" role="button">
                                     <i class="fa fa-trash"></i> Delete
                                 </a>
-                            </p>
-                        </div>
-                        <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                        </div>
+                            </div>
+                        </form>
                     </div>
                     </div>
                 </div>
-                <script>
-                    var canvas = document.getElementById("myChart");
-                    var ctx = canvas.getContext('2d');
-                    // Use this function to get the start of this current week
-                    function getSundayDate(d) {
-                        d = new Date(d);
-                        let day = d.getDay();
-                        let diff = d.getDate()-day;
-                        return new Date(d.setDate(diff))
-                    };
 
-                    // Chart data from DB (passed via render_template)
-                    let chartData = {
-                        labels: [
-                            {% for health in health_data %}
-                                "{{ health['date'] }}",
-                            {% endfor %}
-                        ],
-                        datasets: [{
-                            data: [
-                                {% for health in health_data %}
-                                    {{ health['weight'] }},
-                                {% endfor %}
-                            ],
-                            label: "Weight",
-                            borderColor: "#3e95cd",
-                            fill: false
-                        }],
-                        ids: [
-                            {% for health in health_data %}
-                                "{{ health['health_id'] }}",
-                            {% endfor %}
-                        ]
-                    };
-                    
-                    // Used to get this weeks' dates
-                    let maxDate = new Date();
-                    let minDate = getSundayDate(new Date());
-                    maxDate.setDate(minDate.getDate() + 6); 
-                    let maxDateOnly = (maxDate.getMonth()+1) + "/" + maxDate.getDate() + "/" + maxDate.getFullYear();
-                    let minDateOnly = (minDate.getMonth()+1) + "/" + minDate.getDate() + "/" + minDate.getFullYear();
-                    console.log(maxDateOnly);
-                    console.log(minDateOnly);
+                <!-- Includes vis.js in same folder via jinja-->
+                <script>{% include 'health/vis.js' %}</script>
 
-
-                    // Chart options for pretty display
-                    let chartOptions = {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    suggestedMin: 100,
-                                    suggestedMax: 200
-                                },
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'Weight (lbs)'
-                                }
-                            }],
-                            xAxes: [{
-                                type: "time",
-                                time: {
-                                    parser: "MM/DD/YYYY",
-                                    tooltipFormat: "ll",
-                                    unit: "day",
-                                    displayFormats: {
-                                        "day": "MM/DD (dddd)"
-                                    },
-                                    min: minDateOnly,
-                                    max: maxDateOnly
-                                },
-                                scaleLabel: {
-                                    display: true,
-                                    labelString: 'Date'
-                                }
-                            }]
-                        },
-                        legend: {
-                            display: true,
-                            position: "right",
-                            align: "end",
-                        }
-                    }
-
-                    // Creates chart data in HTML canvas
-                    var chart = new Chart(ctx, {
-                        type: 'line',
-                        data: chartData,
-                        options: chartOptions
-                    });
-                    canvas.onclick = function(evt) {
-                        var activePoint = chart.getElementAtEvent(evt);
-                        // Ensures point on graph is clicked before adding to module
-                        if(Object.keys(activePoint).length !== 0) {
-                            let clickedID = chartData.ids[activePoint[0]._index];
-                            console.log(clickedID);
-                            $(document).ready(function(){
-                                $("#exampleModal").modal('show');
-                            });
-                            $("#edit").attr("href", "/dashboard/edit/"+clickedID.toString());
-                            $('#delete').attr("href", "/dashboard/delete/"+clickedID.toString());
-                        }
-                    };
-                </script>
                 <a href="{{ url_for('health.add_weight') }}" class="btn btn-default" role="button"><i class="fa fa-plus"></i> Add Weight</a>
             </div>
         </div>

@@ -59,27 +59,20 @@ def add_weight():
         
     return render_template('health/weight.html', action='Add', add_weight=True, form=form, title='Add Weight')
 
-@health.route('/dashboard/edit/<string:id>', methods=['GET','POST'])
+@health.route('/dashboard/edit/<string:id>', methods=['POST'])
 @login_required
 def edit_weight(id):
     # Edit health data to DB
     new_id = int(id)
     health = Health.query.get_or_404(new_id)
-    form = HealthForm(obj=health)
-    if form.validate_on_submit():
-        health.weight = form.weight.data
-        health.date = form.date.data
-        try:
-            db.session.commit()
-            flash('You have successfully edited the weight!')
-
-            # redirect to dashboard
-            return redirect(url_for('health.dashboard'))
-        except Exception:
-            db.session.rollback()
-            flash('Editing data failed. Please try again at a later time.')
-
-    return render_template('health/weight.html', action='Edit', add_weight=False, form=form, health=health, title='Edit Weight')
+    health.weight = request.form.get("weight")
+    try:
+        db.session.commit()
+        flash('You have successfully edited the weight!')
+    except Exception:
+        db.session.rollback()
+        flash('Editing data failed. Please enter a valid number.', 'error')
+    return redirect(url_for('health.dashboard'))
 
 @health.route('/dashboard/delete/<string:id>', methods=['GET', 'POST'])
 @login_required

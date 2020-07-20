@@ -2,11 +2,7 @@
 {% import "bootstrap/utils.html" as utils %}
 {% extends "base.html" %}
 {% block title %}
-    {% if add_weight %}
-        Add Weight
-    {% else %}
-        Edit Weight
-    {% endif %}
+    Add Weight
 {% endblock %}
 
 {% block body %}
@@ -24,7 +20,6 @@
                     <h1>Edit Weight</h1>
                 {% endif %}
                 <br/>
-                <!-- {{ wtf.quick_form(form) }} -->
                 <form class="form basic" method="post" role="form">
                     {{ form.hidden_tag() }}
                     {{ wtf.form_errors(form, hiddens="only") }}

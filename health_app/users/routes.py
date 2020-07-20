@@ -32,7 +32,7 @@ def register():
             return redirect(url_for('user.login'))
         except Exception:
             db.session.rollback()
-            flash('Registration failed. Please try again at a later time.')
+            flash('Registration failed. Please try again at a later time.', 'error')
     
     # load registration template
     return render_template('users/register.html', form=form, title='Register')
@@ -49,7 +49,7 @@ def login():
             # Redirect to health page after login
             return redirect(url_for('health.dashboard'))
         else:
-            flash('Incorrect email or password')
+            flash('Incorrect email or password', 'error')
     return render_template('users/login.html', form=form, title='Login')
 
 @user.route('/logout')

@@ -20,6 +20,7 @@ def get_sorted_health_info():
     for health in health_query_data:
         health_data.append(
             {
+                'health_id': health.id,
                 'weight': health.weight,
                 'date': health.date.strftime("%m/%d/%Y")
             }
@@ -39,7 +40,7 @@ def add_weight():
             # Query to see if current user already has a weight for this date
             health = Health.query.filter_by(person_id=current_user.id, date = form.date.data).first()
 
-            #If this query exists, then redirect to edit weight
+            #If this query exists, then redirect to add weight
             if health is not None:
                 flash('A weight is already set for this date.')
                 return redirect(url_for('health.add_weight'))
@@ -58,11 +59,12 @@ def add_weight():
         
     return render_template('health/weight.html', action='Add', add_weight=True, form=form, title='Add Weight')
 
-@health.route('/dashboard/edit/<int:id>', methods=['GET','POST'])
+@health.route('/dashboard/edit/<string:id>', methods=['GET','POST'])
 @login_required
 def edit_weight(id):
     # Edit health data to DB
-    health = Health.query.get_or_404(id)
+    new_id = int(id)
+    health = Health.query.get_or_404(new_id)
     form = HealthForm(obj=health)
     if form.validate_on_submit():
         health.weight = form.weight.data
@@ -79,11 +81,12 @@ def edit_weight(id):
 
     return render_template('health/weight.html', action='Edit', add_weight=False, form=form, health=health, title='Edit Weight')
 
-@health.route('/dashboard/delete/<int:id>', methods=['GET', 'POST'])
+@health.route('/dashboard/delete/<string:id>', methods=['GET', 'POST'])
 @login_required
 def delete_weight(id):
     # Delete health data from DB
-    health = Health.query.get_or_404(id)
+    new_id = int(id)
+    health = Health.query.get_or_404(new_id)
     db.session.delete(health)
     try:
         db.session.commit()

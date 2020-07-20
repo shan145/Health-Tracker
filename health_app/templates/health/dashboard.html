@@ -12,13 +12,40 @@
             <div class="col-lg-12">
                 <h3>Weight Progress Tracker</h3>
                 <canvas id="myChart" width="800" height="400"></canvas>
+                <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Change Data?</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        </div>
+                        <div class="modal-body">
+                            <p>
+                                <a id="edit" href="#" class="btn btn-default" role="button">
+                                    <i class="fa fa-pencil"></i> Edit
+                                </a>
+                            </p>
+                            <p>
+                                <a id="delete" href="#" class="btn btn-default" role="button">
+                                    <i class="fa fa-trash"></i> Delete
+                                </a>
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
                 <script>
                     var canvas = document.getElementById("myChart");
                     var ctx = canvas.getContext('2d');
-
                     // Use this function to get the start of this current week
                     function getSundayDate(d) {
-                        d= new Date(d);
+                        d = new Date(d);
                         let day = d.getDay();
                         let diff = d.getDate()-day;
                         return new Date(d.setDate(diff))
@@ -40,7 +67,12 @@
                             label: "Weight",
                             borderColor: "#3e95cd",
                             fill: false
-                        }]
+                        }],
+                        ids: [
+                            {% for health in health_data %}
+                                "{{ health['health_id'] }}",
+                            {% endfor %}
+                        ]
                     };
                     
                     // Used to get this weeks' dates
@@ -98,11 +130,20 @@
                         options: chartOptions
                     });
                     canvas.onclick = function(evt) {
-                        var activePoints = chart.getElementsAtEvent(evt);
-                        alert("clicked!");
-                    }
+                        var activePoint = chart.getElementAtEvent(evt);
+                        // Ensures point on graph is clicked before adding to module
+                        if(Object.keys(activePoint).length !== 0) {
+                            let clickedID = chartData.ids[activePoint[0]._index];
+                            console.log(clickedID);
+                            $(document).ready(function(){
+                                $("#exampleModal").modal('show');
+                            });
+                            $("#edit").attr("href", "/dashboard/edit/"+clickedID.toString());
+                            $('#delete').attr("href", "/dashboard/delete/"+clickedID.toString());
+                        }
+                    };
                 </script>
-                <a href="{{ url_for('health.add_weight') }}" class="btn btn-default" role="button">Add Weight</a>
+                <a href="{{ url_for('health.add_weight') }}" class="btn btn-default" role="button"><i class="fa fa-plus"></i> Add Weight</a>
             </div>
         </div>
     </div>

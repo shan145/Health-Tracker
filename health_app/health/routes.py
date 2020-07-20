@@ -31,33 +31,26 @@ def get_sorted_health_info():
 @login_required
 def add_weight():
     # Add health data to DB
-    form = HealthForm()
-
-    if form.is_submitted():
-        # Update form date data to check if it matches standards
-        form.date.data = request.form['date']
-        if form.validate():
-            # Query to see if current user already has a weight for this date
-            health = Health.query.filter_by(person_id=current_user.id, date = form.date.data).first()
-
-            #If this query exists, then redirect to add weight
-            if health is not None:
-                flash('A weight is already set for this date.')
-                return redirect(url_for('health.add_weight'))
-            
-            # Create weight data from model and add to database
-            weight = Health(weight = form.weight.data, date = form.date.data, person_id = current_user.id)
+    health_weight = request.form.get('weightAdd')
+    health_date = request.form.get('dateAdd')
+    if (not health_date) or (not health_weight):
+        flash('Unable to add data. Please fill out the form properly.', 'error')
+    else:
+        #Check to see if current user already has a weight for this date
+        health = Health.query.filter_by(person_id=current_user.id, date=health_date).first()
+        if health is not None:
+            flash('A weight is already set for this date.', 'error')
+        else:
+            weight = Health(weight = health_weight, date=health_date, person_id=current_user.id)
             db.session.add(weight)
             try:
                 db.session.commit()
                 flash('You have successfully added the weight!')
-                # redirect to dashboard with updated board
-                return redirect(url_for('health.dashboard'))
             except Exception:
                 db.session.rollback()
-                flash('Adding data failed. Please try again at a later time.')
-        
-    return render_template('health/weight.html', action='Add', add_weight=True, form=form, title='Add Weight')
+                flash('Please enter valid data for weight.', 'error')
+    return redirect(url_for('health.dashboard'))
+
 
 @health.route('/dashboard/edit/<string:id>', methods=['POST'])
 @login_required

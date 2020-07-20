@@ -99,7 +99,7 @@ canvas.onclick = function(evt) {
         let clickedDate = chartData.labels[activePoint[0]._index];
         //Shows modal box through jquery
         $(document).ready(function(){
-            $("#exampleModal").modal('show');
+            $("#graphModal").modal('show');
         });
 
         //Creates links for buttons in dashboard

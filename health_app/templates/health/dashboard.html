@@ -13,7 +13,23 @@
         <div class="row">
             <div class="col-lg-12">
                 <h3>Weight Progress Tracker</h3>
-                <canvas id="myChart" width="800" height="400"></canvas>
+                <div class="col-md-10">
+                    <canvas id="myChart" width="800" height="400"></canvas>
+                </div>
+                <div class="col-md-2">
+                    <br/><br/><br/><br/>
+                    <button id="week" class="btn btn-default">
+                        Week
+                    </button>
+                    <br/><br/>
+                    <button id="month" class="btn btn-default">
+                        Month
+                    </button>
+                    <br/><br/>
+                    <button id="year" class="btn btn-default">
+                        Year
+                    </button>
+                </div>
                 <!-- Graph Modal -->
                 <div class="modal fade" id="graphModal" tabindex="-1" role="dialog" aria-labelledby="graphModalLabel" aria-hidden="true">
                     <div class="modal-dialog model-sm" role="document">
@@ -82,12 +98,10 @@
 
                 <!-- Includes vis.js in same folder via jinja-->
                 <script>{% include 'health/vis.js' %}</script>
-
-                <button id="add" class="btn btn-default" data-toggle="modal" data-target="#addModal">
-                    <i class="fa fa-plus"></i> Add Weight
-                </button>
-                <!-- <a href="{{ url_for('health.add_weight') }}" class="btn btn-default" role="button"><i class="fa fa-plus"></i> Add Weight</a> -->
             </div>
+            <button id="add" class="btn btn-default" data-toggle="modal" data-target="#addModal">
+                <i class="fa fa-plus"></i> Add Weight
+            </button>
         </div>
     </div>
 </div>

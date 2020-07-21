@@ -22,10 +22,20 @@ def get_sorted_health_info():
             {
                 'health_id': health.id,
                 'weight': health.weight,
-                'date': health.date.strftime("%m/%d/%Y")
+                'date': health.date
             }
         )
-    return sorted(health_data, key=lambda k: k['date'])
+    sorted_health_data = sorted(health_data, key=lambda k: k['date'])
+    final_health_data = []
+    for health in sorted_health_data:
+        final_health_data.append(
+            {
+                'health_id': health['health_id'],
+                'weight': health['weight'],
+                'date': health['date'].strftime("%m/%d/%Y")
+            }
+        )
+    return final_health_data
 
 @health.route('/dashboard/add', methods=['GET', 'POST'])
 @login_required

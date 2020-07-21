@@ -10,11 +10,25 @@ function getSundayDate(d) {
 };
 
 // Use this function to create initial chart for week and then store other chart type cookie for session use
-function doOnce() {
-    if (!document.cookie.split('; ').find(row => row.startsWith('doSomethingOnlyOnce'))) {
-        document.cookie = "chartType=week;";
-        document.cookie = "doSomethingOnlyOnce=true; expires=Fri, 31 Dec 9999 23:59:59 GMT";
+function getCookie(name) {
+    var dc = document.cookie;
+    var prefix = name + "=";
+    var begin = dc.indexOf("; " + prefix);
+    if (begin == -1) {
+        begin = dc.indexOf(prefix);
+        if (begin != 0) return null;
     }
+    else
+    {
+        begin += 2;
+        var end = document.cookie.indexOf(";", begin);
+        if (end == -1) {
+        end = dc.length;
+        }
+    }
+    // because unescape has been deprecated, replaced with decodeURI
+    //return unescape(dc.substring(begin + prefix.length, end));
+    return decodeURI(dc.substring(begin + prefix.length, end));
 }
 
 function createChart() {
@@ -186,12 +200,13 @@ function createChart() {
     };
 
     //Use this to set up initial cookie calls
-    doOnce();
-    const chartCookieValue = document.cookie.split('; ').find(row => row.startsWith('chartType')).split('=')[1];
-
+    let currCookieValue = getCookie('chartType');
+    let chartCookieValue; 
+    if(currCookieValue != null) {
+        chartCookieValue = document.cookie.split('; ').find(row => row.startsWith('chartType')).split('=')[1];
+    }
     // Finds the last selected chart through cookie to stay on selected graph
-    let currOptions;
-    console.log(typeof(chartCookieValue));
+    let currOptions = chartOptions;
     if(chartCookieValue === 'week') {
         currOptions = chartOptions;
     }
@@ -248,9 +263,7 @@ function createChart() {
             let clickedWeight = chartData.datasets[activePoint[0]._datasetIndex].data[activePoint[0]._index];
             let clickedDate = chartData.labels[activePoint[0]._index];
             //Shows modal box through jquery
-            $(document).ready(function(){
-                $("#graphModal").modal('show');
-            });
+            $("#graphModal").modal('show');
 
             //Creates links for buttons in dashboard
             $("#saveFormID").attr("action", "/dashboard/edit/"+clickedID.toString());
@@ -263,4 +276,7 @@ function createChart() {
     };
 };
 
-createChart();
+$(document).ready(function(){
+    createChart();
+});
+

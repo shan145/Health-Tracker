@@ -62,13 +62,15 @@ def add_weight():
     return redirect(url_for('health.dashboard'))
 
 
-@health.route('/dashboard/edit/<string:id>', methods=['POST'])
+@health.route('/dashboard/edit/<string:id>', methods=['GET', 'POST'])
 @login_required
 def edit_weight(id):
     # Edit health data to DB
     new_id = int(id)
     health = Health.query.get_or_404(new_id)
     health.weight = request.form.get("weight")
+    if health.weight is None:
+        health.weight = request.args.get("weight")
     try:
         db.session.commit()
         flash('You have successfully edited the weight!')

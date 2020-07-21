@@ -137,3 +137,8 @@ p.copyright {
 .alert-error .alert-link {
     color: #843534;
 }
+
+td {
+    color: #5e5e5a;
+    font-size: 100%
+}

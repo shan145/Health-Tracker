@@ -10,8 +10,8 @@ class Config(object):
   DEBUG = False
   TESTING = False
   CSRF_ENABLED = True
-  CSRF_SESSION_KEY = "aiosdfjsadjfalfjalejroiwerjeawfewfaw"
-  SECRET_KEY = b'=|\x11\xb0\xbe\x88\x9dC\xa0\xb2K>\xf3\xaf\xef\xe3'
+  CSRF_SESSION_KEY = "secret"
+  SECRET_KEY = "secret"
   SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
   THREADS_PER_PAGE = 2
 

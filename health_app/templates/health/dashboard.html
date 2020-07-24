@@ -21,6 +21,7 @@
                         </button>
                     </div>
                     <form class="form basic" action="#" method="post" role="form" id="saveFormID">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="weightForm">Weight (lbs)</label>
@@ -56,6 +57,7 @@
                         </button>
                     </div>
                     <form class="form basic" action="{{ url_for('health.add_weight') }}" method="post" role="form" id="addForm">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="weightAddForm">Weight (lbs)</label>

@@ -8,7 +8,7 @@ from .forms import LoginForm, RegistrationForm
 from .. import db
 from ..model import User
 
-@user.route('/home')
+@user.route('/')
 def startpage():
     # Renders start page on /home route
     return render_template('users/index.html', title='Welcome')

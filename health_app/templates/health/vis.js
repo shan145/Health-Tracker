@@ -182,7 +182,7 @@ function createChart() {
         scales: {
             yAxes: [{
                 ticks: {
-                    suggestedMin: 0,
+                    suggestedMin: 100,
                     suggestedMax: 200
                 },
                 scaleLabel: {

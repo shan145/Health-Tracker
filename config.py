@@ -1,15 +1,4 @@
 import os
-from dotenv import load_dotenv
-
-# Load environmental variables
-load_dotenv()
-
-# Database info
-DB_USERNAME  = os.getenv('DB_USERNAME')
-DB_PASSWORD  = os.getenv('DB_PASSWORD')
-DB_HOST      = os.getenv('DB_HOST')
-DB_NAME      = os.getenv('DB_NAME')
-DB_URL       = 'postgresql://{}:{}@{}/{}'.format(DB_USERNAME, DB_PASSWORD, DB_HOST, DB_NAME)
 
 # Ensure Python path
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -22,8 +11,8 @@ class Config(object):
   TESTING = False
   CSRF_ENABLED = True
   CSRF_SESSION_KEY = "secret"
-  SECRET_KEY = "not_this"
-  SQLALCHEMY_DATABASE_URI = DB_URL
+  SECRET_KEY = b'=|\x11\xb0\xbe\x88\x9dC\xa0\xb2K>\xf3\xaf\xef\xe3'
+  SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL')
   THREADS_PER_PAGE = 2
 
 class ProductionConfig(Config):

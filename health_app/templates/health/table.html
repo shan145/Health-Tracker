@@ -7,7 +7,7 @@
                 <tr>
                     <th width ="40%"> Weight (lbs) </th>
                     <th width ="40%"> Date </th>
-                    <th width ="10%"> Edit </th>
+                    <th width ="10%"> Save </th>
                     <th width ="10%"> Delete </th>
                 </tr>
                 <tbody>
@@ -22,7 +22,7 @@
                         <td>
                             <!-- Sends weight data by request.args to Python for editing -->
                             <a href='' onclick="this.href='/dashboard/edit/{{ health['health_id'] }}?weight='+document.getElementById('table_weight{{ health['health_id'] }}').value">
-                                <i class="fa fa-pencil"></i> Edit
+                                <i class="fa fa-pencil"></i> Save
                             </a>
                         </td>
                         <td>

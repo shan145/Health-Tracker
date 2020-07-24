@@ -1,4 +1,3 @@
-from marshmallow_sqlalchemy import ModelSchema
 from . import db
 
 class Base(db.Model):

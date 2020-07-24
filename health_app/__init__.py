@@ -2,11 +2,8 @@ from flask import Flask, render_template, jsonify, make_response, Blueprint
 from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
-from dotenv import load_dotenv
 import os 
 
-# Use dotenv to load env variables
-load_dotenv()
 # Database
 db = SQLAlchemy()
 
@@ -14,28 +11,25 @@ db = SQLAlchemy()
 login_manager = LoginManager()
 
 # Creating flask app for use throughout
-app = Flask(__name__, static_url_path='/static')
-app.config.from_object(os.getenv('APP_SETTINGS'))
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-db.init_app(app)
-
-# Default test route for Flask
-@app.route('/')
-def test():
-    return 'Route successful'
+application = Flask(__name__)
+application.config.from_object(os.environ.get('APP_SETTINGS'))
+application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+SECRET_KEY = os.urandom(32)
+application.config['SECRET_KEY'] = SECRET_KEY
+db.init_app(application)
 
 # Setting up login manager for app
-login_manager.init_app(app)
+login_manager.init_app(application)
 login_manager.login_message = "Login is required to enter dashboard"
 login_manager.login_view="user.login"
 
 # Sets up Bootstrap to allow for wtf forms
-Bootstrap(app)
+Bootstrap(application)
 
 # Registering blueprints for app
 from .users import user as user_blueprint
-app.register_blueprint(user_blueprint)
+application.register_blueprint(user_blueprint)
 
 from .health import health as health_blueprint
-app.register_blueprint(health_blueprint)
+application.register_blueprint(health_blueprint)
 

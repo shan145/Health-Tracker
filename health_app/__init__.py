@@ -3,9 +3,7 @@ from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
 from flask_bootstrap import Bootstrap
 from flask_wtf.csrf import CSRFProtect
-
-import os 
-
+import os
 # Database
 db = SQLAlchemy()
 
@@ -19,8 +17,6 @@ login_manager = LoginManager()
 application = Flask(__name__)
 application.config.from_object(os.environ.get('APP_SETTINGS'))
 application.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-SECRET_KEY = os.urandom(32)
-application.config['SECRET_KEY'] = SECRET_KEY
 csrf.init_app(application)
 db.init_app(application)
 

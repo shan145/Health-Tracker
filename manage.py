@@ -4,7 +4,7 @@ from flask_migrate import Migrate, MigrateCommand
 from health_app import application, db, model
 
 # Build manager
-migrate = Migrate(application, db)
+migrate = Migrate(application, db, compare_type=True)
 manager = Manager(application)
 manager.add_command("db", MigrateCommand)
 

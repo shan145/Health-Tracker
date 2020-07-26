@@ -37,7 +37,7 @@ class User(UserMixin, Base):
 class Health(Base):
     __tablename__ = 'health'
     id            = db.Column(db.Integer, primary_key = True)
-    weight        = db.Column(db.Integer, nullable=False)
+    weight        = db.Column(db.Float, nullable=False)
     date          = db.Column(db.Date, nullable=False)
     person_id     = db.Column(db.Integer, db.ForeignKey('users.id'))
 

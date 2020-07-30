@@ -1,17 +1,9 @@
-var csrf_token = "{{ csrf_token() }}";
-
-$.ajaxSetup({
-    beforeSend: function(xhr, settings) {
-        if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", csrf_token);
-        }
-    }
-});
-
 var canvas = document.getElementById("myChart");
 var ctx = canvas.getContext('2d');
 
-// Use this function to get the start of this current week
+/*
+ * Used to get start of the current week
+ */
 function getSundayDate(d) {
     d = new Date(d);
     let day = d.getDay();
@@ -19,7 +11,9 @@ function getSundayDate(d) {
     return new Date(d.setDate(diff))
 };
 
-// Use this function to create initial chart for week and then store other chart type cookie for session use
+/*
+ * Used to store cookies for website usage
+ */
 function getCookie(name) {
     var dc = document.cookie;
     var prefix = name + "=";
@@ -36,11 +30,12 @@ function getCookie(name) {
         end = dc.length;
         }
     }
-    // because unescape has been deprecated, replaced with decodeURI
-    //return unescape(dc.substring(begin + prefix.length, end));
     return decodeURI(dc.substring(begin + prefix.length, end));
 }
 
+/*
+ * Creates visualization charts
+ */
 function createChart() {
     // Chart data from DB (passed via render_template)
     let chartData = {
@@ -286,7 +281,17 @@ function createChart() {
     };
 };
 
+// Call when document is ready
 $(document).ready(function(){
+    var csrf_token = "{{ csrf_token() }}";
+    $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+            if (!/^(GET|HEAD|OPTIONS|TRACE)$/i.test(settings.type) && !this.crossDomain) {
+                xhr.setRequestHeader("X-CSRFToken", csrf_token);
+            }
+        }
+    });
+
     createChart();
 });
 

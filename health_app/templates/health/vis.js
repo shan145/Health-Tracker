@@ -63,11 +63,10 @@ function createChart() {
     };
 
     // Used to get this weeks' dates, and sets week option format
-    let maxDate = new Date();
     let minDate = getSundayDate(new Date());
-    maxDate.setDate(minDate.getDate() + 6); 
-    let maxDateOnly = (maxDate.getMonth()+1) + "/" + maxDate.getDate() + "/" + maxDate.getFullYear();
     let minDateOnly = (minDate.getMonth()+1) + "/" + minDate.getDate() + "/" + minDate.getFullYear();
+    minDate.setDate(minDate.getDate() + 6); 
+    let maxDateOnly = (minDate.getMonth()+1) + "/" + minDate.getDate() + "/" + minDate.getFullYear();
     let weekOption = [{
         type: "time",
         time: {

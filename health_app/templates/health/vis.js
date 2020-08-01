@@ -243,6 +243,7 @@ function createChart() {
     let moveWeeks = 0;
     let moveMonths = 0;
     let moveYears = 0;
+    document.cookie="chartType=week;"
     // Finds the last selected chart through cookie to stay on selected graph
     let currOptions = getWeekOptions(moveWeeks);
     if(chartCookieValue === 'week') {
@@ -298,7 +299,7 @@ function createChart() {
         if(currCookieValue != null) {
             chartCookieValue = document.cookie.split('; ').find(row => row.startsWith('chartType')).split('=')[1];
         }
-        let thisOptions = getWeekOptions(moveWeeks);
+        let thisOptions;
         if(chartCookieValue === 'week') {
             moveWeeks--;
             thisOptions = getWeekOptions(moveWeeks);
@@ -324,7 +325,7 @@ function createChart() {
         if(currCookieValue != null) {
             chartCookieValue = document.cookie.split('; ').find(row => row.startsWith('chartType')).split('=')[1];
         }
-        let thisOptions = getWeekOptions(moveWeeks);
+        let thisOptions;
         if(chartCookieValue === 'week') {
             moveWeeks++;
             thisOptions = getWeekOptions(moveWeeks);

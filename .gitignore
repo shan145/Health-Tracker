@@ -1,3 +1,7 @@
 venv/
 .env
 migrations/
+__pycache__/
+health_app/__pycache__
+health_app/health/__pycache__
+healthapp/users/__pycache__

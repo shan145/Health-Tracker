@@ -43,8 +43,6 @@ function getWeekOptions(n) {
     let minDateOnly = (minDate.getMonth()+1) + "/" + minDate.getDate() + "/" + minDate.getFullYear();
     minDate.setDate(minDate.getDate() + 6); 
     let maxDateOnly = (minDate.getMonth()+1) + "/" + minDate.getDate() + "/" + minDate.getFullYear();
-    console.log(minDateOnly);
-    console.log(maxDateOnly);
     let weekOption = [{
         type: "time",
         time: {
@@ -54,8 +52,11 @@ function getWeekOptions(n) {
             displayFormats: {
                 "day": "MM/DD (dddd)"
             },
+            
+        },
+        ticks: {
             min: minDateOnly,
-            max: maxDateOnly
+            max:maxDateOnly
         },
         scaleLabel: {
             display: true,
@@ -77,6 +78,41 @@ function getWeekOptions(n) {
                 }
             }],
             xAxes: weekOption
+        },
+        plugins: {
+            zoom: {
+                // Container for pan options
+                pan: {
+                    // Boolean to enable panning
+                    enabled: true,
+        
+                    // Panning directions. Remove the appropriate direction to disable
+                    // Eg. 'y' would only allow panning in the y direction
+                    // A function that is called as the user is panning and returns the
+                    // available directions can also be used:
+                    //   mode: function({ chart }) {
+                    //     return 'xy';
+                    //   },
+                    mode: 'x',
+        
+                    rangeMin: {
+                        // Format of min pan range depends on scale type
+                        x: null,
+                        y: null
+                    },
+                    rangeMax: {
+                        // Format of max pan range depends on scale type
+                        x: null,
+                        y: null
+                    },
+        
+                    // On category scale, factor of pan velocity
+                    speed: 5,
+        
+                    // Minimal pan distance required before actually applying pan
+                    threshold: 5
+                }
+            }
         },
         legend: {
             display: false,
@@ -108,7 +144,9 @@ function getMonthOptions(n) {
             unit: "day",
             displayFormats: {
                 "day": "MM/DD"
-            },
+            }
+        },
+        ticks: {
             min: minMonthDateOnly,
             max: maxMonthDateOnly
         },
@@ -132,6 +170,41 @@ function getMonthOptions(n) {
                 }
             }],
             xAxes: monthOption
+        },
+        plugins: {
+            zoom: {
+                // Container for pan options
+                pan: {
+                    // Boolean to enable panning
+                    enabled: true,
+        
+                    // Panning directions. Remove the appropriate direction to disable
+                    // Eg. 'y' would only allow panning in the y direction
+                    // A function that is called as the user is panning and returns the
+                    // available directions can also be used:
+                    //   mode: function({ chart }) {
+                    //     return 'xy';
+                    //   },
+                    mode: 'x',
+        
+                    rangeMin: {
+                        // Format of min pan range depends on scale type
+                        x: null,
+                        y: null
+                    },
+                    rangeMax: {
+                        // Format of max pan range depends on scale type
+                        x: null,
+                        y: null
+                    },
+        
+                    // On category scale, factor of pan velocity
+                    speed: 5,
+        
+                    // Minimal pan distance required before actually applying pan
+                    threshold: 5
+                }
+            }
         },
         legend: {
             display: false,
@@ -168,7 +241,9 @@ function getYearOptions(n) {
             stepSize: 1,
             displayFormats: {
                 "day": "MMM"
-            },
+            } 
+        },
+        ticks: {
             min: minYearDateOnly,
             max: maxYearDateOnly
         },
@@ -192,6 +267,58 @@ function getYearOptions(n) {
                 }
             }],
             xAxes: yearOption
+        },
+        plugins: {
+            zoom: {
+                // Container for pan options
+                pan: {
+                    // Boolean to enable panning
+                    enabled: true,
+        
+                    // Panning directions. Remove the appropriate direction to disable
+                    // Eg. 'y' would only allow panning in the y direction
+                    // A function that is called as the user is panning and returns the
+                    // available directions can also be used:
+                    //   mode: function({ chart }) {
+                    //     return 'xy';
+                    //   },
+                    mode: 'xy',
+        
+                    rangeMin: {
+                        // Format of min pan range depends on scale type
+                        x: null,
+                        y: 0
+                    },
+                    rangeMax: {
+                        // Format of max pan range depends on scale type
+                        x: null,
+                        y: 200
+                    },
+        
+                    // On category scale, factor of pan velocity
+                    speed: 5,
+        
+                    // Minimal pan distance required before actually applying pan
+                    threshold: 5
+                },
+
+                // Container for zoom options
+                zoom: {
+                    enabled: true,
+                    mode: 'xy',
+                    rangeMin: {
+                        x: minYearDate,
+                        y: 0
+                    },
+                    rangeMax: {
+                        x:maxYearDate,
+                        y:200
+                    },
+                    speed: 0.1,
+                    threshold: 2,
+                    sensitivity: 3
+                }
+            }
         },
         legend: {
             display: false,
@@ -235,26 +362,55 @@ function createChart() {
 
     //Use this to set up initial cookie calls
     let currCookieValue = getCookie('chartType');
-    let chartCookieValue; 
+    let chartValue; 
     if(currCookieValue != null) {
-        chartCookieValue = document.cookie.split('; ').find(row => row.startsWith('chartType')).split('=')[1];
+        chartValue = document.cookie.split('; ').find(row => row.startsWith('chartType')).split('=')[1];
+    } else {
+        document.cookie="chartType=week;"
     }
-    // Use the following to decide how far to shift weeks, months, or years
-    let moveWeeks = 0;
-    let moveMonths = 0;
-    let moveYears = 0;
-    document.cookie="chartType=week;"
+
+    // Use cookies and move by weeks
+    let weekCookieValue = getCookie('weekType');
+    let weekValue;
+    if(weekCookieValue != null) {
+        weekValue = document.cookie.split('; ').find(row => row.startsWith('weekType')).split('=')[1];
+    } else {
+        document.cookie="weekType=0;"
+        weekValue = "0";
+    }
+    let moveWeeks = Number(weekValue);
+
+    // Use cookies and move by months
+    let monthCookieValue = getCookie('monthType');
+    let monthValue;
+    if(monthCookieValue != null) {
+        monthValue = document.cookie.split('; ').find(row => row.startsWith('monthType')).split('=')[1];
+    } else {
+        document.cookie="monthType=0;"
+        monthValue = "0";
+    }
+    let moveMonths = Number(monthValue);
+
+    // Use cookies and move by years
+    let yearCookieValue = getCookie('yearType');
+    let yearValue;
+    if(yearCookieValue != null) {
+        yearValue = document.cookie.split('; ').find(row => row.startsWith('yearType')).split('=')[1];
+    } else {
+        document.cookie="yearType=0;"
+        yearValue = "0";
+    }
+    let moveYears = Number(yearValue);
+
     // Finds the last selected chart through cookie to stay on selected graph
     let currOptions = getWeekOptions(moveWeeks);
-    if(chartCookieValue === 'week') {
-        currOptions = getWeekOptions(moveWeeks);
-    }
-    else if(chartCookieValue === 'month') {
+    if(chartValue === 'month') {
         currOptions = getMonthOptions(moveMonths);
     }
-    else if(chartCookieValue === 'year') {
+    else if(chartValue === 'year') {
         currOptions = getYearOptions(moveYears);
     }
+
     // Creates chart data in HTML canvas
     let chart = new Chart(ctx, {
         type: 'line',
@@ -302,14 +458,17 @@ function createChart() {
         let thisOptions;
         if(chartCookieValue === 'week') {
             moveWeeks--;
+            document.cookie="weekType="+moveWeeks+";";
             thisOptions = getWeekOptions(moveWeeks);
         }
         else if(chartCookieValue === 'month') {
             moveMonths--;
+            document.cookie="monthType="+moveMonths+";";
             thisOptions = getMonthOptions(moveMonths);
         }
         else if(chartCookieValue === 'year') {
             moveYears--;
+            document.cookie="yearType="+moveYears+";";
             thisOptions = getYearOptions(moveYears);
         }
         chart = new Chart(ctx, {
@@ -328,14 +487,17 @@ function createChart() {
         let thisOptions;
         if(chartCookieValue === 'week') {
             moveWeeks++;
+            document.cookie="weekType="+moveWeeks+";";
             thisOptions = getWeekOptions(moveWeeks);
         }
         else if(chartCookieValue === 'month') {
             moveMonths++;
+            document.cookie="monthType="+moveMonths+";";
             thisOptions = getMonthOptions(moveMonths);
         }
         else if(chartCookieValue === 'year') {
             moveYears++;
+            document.cookie="yearType="+moveYears+";";
             thisOptions = getYearOptions(moveYears);
         }
         chart = new Chart(ctx, {
@@ -383,4 +545,3 @@ $(document).ready(function(){
 
     createChart();
 });
-

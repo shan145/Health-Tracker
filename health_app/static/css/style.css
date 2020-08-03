@@ -146,3 +146,7 @@ td {
 .button-center {
     margin-top: 12px;
 }
+
+.btn-custom-width {
+    width: 80px;
+}
